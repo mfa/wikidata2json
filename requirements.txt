@@ -1,2 +1,3 @@
+aiofiles
 lxml
 python-dateutil
