@@ -20,7 +20,8 @@ async def export_page(title, data):
 
 
 async def process_file_xml(filename, rename):
-    for index, event, element in enumerate(etree.iterparse(open(filename, 'rb'), tag='{*}page')):
+    index = 0
+    for event, element in etree.iterparse(open(filename, 'rb'), tag='{*}page'):
         title = element.find('title', namespaces=element.nsmap).text
         if title.startswith(('Q', 'P')):
             revision = element.find('revision', namespaces=element.nsmap)
@@ -35,6 +36,7 @@ async def process_file_xml(filename, rename):
                 await export_page(title, d)
         if index % 1000:
              gc.collect()
+        index += 1
     if rename:
         os.rename(filename, filename + '.done')
 
