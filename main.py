@@ -26,7 +26,12 @@ async def process_file_xml(filename, rename):
             data = revision.find('text', namespaces=element.nsmap).text
             # isotime = revision.find('timestamp', namespaces=element.nsmap).text
             # dt = dateutil.parser.parse(isotime)
-            await export_page(title, json.loads(data.replace('&quot;', '"')))
+            try:
+                d = json.loads(data.replace('&quot;', '"'))
+            except json.decoder.JSONDecodeError:
+                print(f'Error in {title}')
+            else:
+                await export_page(title, d)
     if rename:
         os.rename(filename, filename + '.done')
 
