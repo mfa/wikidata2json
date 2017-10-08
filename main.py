@@ -32,8 +32,7 @@ async def process_file_xml(filename, rename):
                 print(f'Error in {title}')
             else:
                 await export_page(title, d)
-        del element
-        del event
+        element.clear()
     if rename:
         os.rename(filename, filename + '.done')
 
