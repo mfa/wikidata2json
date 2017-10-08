@@ -11,10 +11,11 @@ from lxml import etree, objectify
 
 async def export_page(title, data):
     filename = f'output/{title}.json.bz2'
-    async with aiof.open(filename, 'wb') as fp:
-        compressed_data = bz2.compress(json.dumps(data, indent=4, sort_keys=True).encode())
-        await fp.write(compressed_data)
-        await fp.flush()
+    if not os.path.exists(filename):
+        async with aiof.open(filename, 'wb') as fp:
+            compressed_data = bz2.compress(json.dumps(data, indent=4, sort_keys=True).encode())
+            await fp.write(compressed_data)
+            await fp.flush()
 
 
 async def process_file_xml(filename, rename):
