@@ -1,5 +1,6 @@
 import asyncio
 import bz2
+import gc
 import glob
 import json
 import os
@@ -19,7 +20,7 @@ async def export_page(title, data):
 
 
 async def process_file_xml(filename, rename):
-    for event, element in etree.iterparse(open(filename, 'rb'), tag='{*}page'):
+    for index, event, element in enumerate(etree.iterparse(open(filename, 'rb'), tag='{*}page')):
         title = element.find('title', namespaces=element.nsmap).text
         if title.startswith(('Q', 'P')):
             revision = element.find('revision', namespaces=element.nsmap)
@@ -32,6 +33,8 @@ async def process_file_xml(filename, rename):
                 print(f'Error in {title}')
             else:
                 await export_page(title, d)
+        if index % 1000:
+             gc.collect()
     if rename:
         os.rename(filename, filename + '.done')
 
