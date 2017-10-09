@@ -17,8 +17,8 @@ async def export_page(title, data):
     os.makedirs('output/' + folder, exist_ok=True)
     filename = f'output/{folder}/{title}.json.bz2'
     old_filename = f'output/{title}.json.bz2'
-    if os.path.exists(filename):
-        os.rename(old_filename, filename)
+    if os.path.exists(old_filename):
+        os.replace(old_filename, filename)
     if not os.path.exists(filename):
         async with aiof.open(filename, 'wb') as fp:
             compressed_data = bz2.compress(json.dumps(data, indent=4, sort_keys=True).encode())
